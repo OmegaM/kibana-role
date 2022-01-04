@@ -1,16 +1,16 @@
-pipeline{
-    agent any
-    stages{
-        stage('SCM'){
-            steps{
-                git credentialsId: 'github', url: 'git@github.com:OmegaM/kibana-role.git'
-            }
+node("linux"){
+    stage("Git checkout"){
+        git credentialsId: 'github', url: 'git@github.com:aragastmatb/example-playbook.git'
+    }
+    stage("Sample define secret_check"){
+        secret_check=true
+    }
+    stage("Run playbook"){
+        if (secret_check){
+            sh 'ansible-playbook site.yml -i inventory/prod.yml'
         }
-        
-        stage('Test'){
-            steps{
-                sh 'molecule test'
-            }
+        else{
+            echo 'need more action'
         }
         
     }
